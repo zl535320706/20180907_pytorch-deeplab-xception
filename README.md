@@ -1,6 +1,6 @@
 # pytorch-deeplab-xception
 
-The codes works well in cityscapes(python3.6.6, pytorch1.4).
+The codes works well in cityscapes(python3.6.6, pytorch0.4.1).
 But the best MIoU is 0.6017. Training the code needs a lot of time.
 It's not good enough to work as a baseline.
 
