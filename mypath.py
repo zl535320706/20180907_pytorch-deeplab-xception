@@ -6,7 +6,7 @@ class Path(object):
         elif database == 'sbd':
             return '/path/to/Segmentation/benchmark_RELEASE/' # folder that contains dataset/.
         elif database == 'cityscapes':
-            return '/path/to/Segmentation/cityscapes/'         # foler that contains leftImg8bit/
+            return '/home/zhangli/Datasets/CITYSCAPES/leftImg8bit_trainvaltest'         # foler that contains leftImg8bit/
         else:
             print('Database {} not available.'.format(database))
             raise NotImplementedError

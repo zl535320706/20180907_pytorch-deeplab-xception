@@ -2,6 +2,7 @@ import socket
 import timeit
 from datetime import datetime
 import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 import glob
 from collections import OrderedDict
 import numpy as np
@@ -26,12 +27,14 @@ from dataloaders import custom_transforms as tr
 gpu_id = 0
 print('Using GPU: {} '.format(gpu_id))
 # Setting parameters
-nEpochs = 100  # Number of epochs for training
-resume_epoch = 0  # Default is 0, change if want to resume
+nEpochs = 200  # Number of epochs for training
+resume_epoch = 90  # Default is 0, change if want to resume
+
+BATCH_SIZE = 2
 
 p = OrderedDict()  # Parameters to include in report
-p['trainBatch'] = 4  # Training batch size
-testBatch = 4  # Testing batch size
+p['trainBatch'] = BATCH_SIZE  # Training batch size
+testBatch = BATCH_SIZE  # Testing batch size
 useTest = True  # See evolution of the test set when training
 nValInterval = 5  # Run on test set every nTestInterval epochs
 snapshot = 10  # Store a model every snapshot epochs
@@ -47,7 +50,7 @@ exp_name = os.path.dirname(os.path.abspath(__file__)).split('/')[-1]
 
 if resume_epoch != 0:
     runs = sorted(glob.glob(os.path.join(save_dir_root, 'run', 'run_*')))
-    run_id = int(runs[-1].split('_')[-1]) if runs else 0
+    run_id = int(runs[-1].split('_')[-1]) + 1 if runs else 0
 else:
     runs = sorted(glob.glob(os.path.join(save_dir_root, 'run', 'run_*')))
     run_id = int(runs[-1].split('_')[-1]) + 1 if runs else 0
@@ -138,6 +141,7 @@ if resume_epoch != nEpochs:
         for ii, sample_batched in enumerate(trainloader):
 
             inputs, labels = sample_batched['image'], sample_batched['label']
+            if inputs.shape[0] != BATCH_SIZE:    continue
             # Forward-Backward of the mini-batch
             inputs, labels = Variable(inputs, requires_grad=True), Variable(labels)
             global_step += inputs.data.shape[0]
